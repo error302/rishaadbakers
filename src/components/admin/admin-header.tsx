@@ -14,6 +14,7 @@ import {
   LogOut,
   Store,
   FileText,
+  UserPlus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -39,6 +40,7 @@ const NAV_GROUPS: { label: string; items: { href: string; label: string; icon: R
     items: [
       { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
       { href: '/admin/customers', label: 'Customers', icon: Users },
+      { href: '/admin/leads', label: 'Leads', icon: UserPlus },
     ],
   },
   {
@@ -56,6 +58,7 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/admin/orders')) return 'Orders'
   if (pathname.startsWith('/admin/categories')) return 'Categories'
   if (pathname.startsWith('/admin/customers')) return 'Customers'
+  if (pathname.startsWith('/admin/leads')) return 'Leads'
   if (pathname.startsWith('/admin/content')) return 'Content & Wording'
   if (pathname.startsWith('/admin/settings')) return 'Settings'
   return 'Admin'

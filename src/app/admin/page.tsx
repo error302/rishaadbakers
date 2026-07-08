@@ -1,16 +1,18 @@
 import Link from 'next/link'
-import { ArrowRight, ArrowUpRight, DollarSign, Package, ShoppingCart, Users, AlertTriangle, TrendingUp, Cake } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, DollarSign, Package, ShoppingCart, Users, AlertTriangle, TrendingUp, Cake, UserPlus } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { DashboardCharts } from './dashboard-charts'
 import { getDashboardStats, getOrders } from '@/lib/queries'
 import { formatPrice, formatDate, relativeTime, ORDER_STATUS_META } from '@/lib/format'
+import { db } from '@/lib/db'
 
 export default async function AdminDashboardPage() {
-  const [stats, recentOrders] = await Promise.all([
+  const [stats, recentOrders, newLeadsCount] = await Promise.all([
     getDashboardStats(),
     getOrders({ limit: 6 }),
+    db.lead.count({ where: { status: 'NEW' } }),
   ])
 
   return (
@@ -22,6 +24,33 @@ export default async function AdminDashboardPage() {
           Here&rsquo;s what&rsquo;s happening at the bakery today.
         </p>
       </div>
+
+      {/* New leads alert */}
+      {newLeadsCount > 0 && (
+        <Card className="border-accent/40 bg-accent/5">
+          <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/15 text-accent">
+                <UserPlus className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-semibold">
+                  {newLeadsCount} new enrolment {newLeadsCount === 1 ? 'enquiry' : 'enquiries'} awaiting response
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Follow up with prospective students from the Baking Class page.
+                </p>
+              </div>
+            </div>
+            <Button asChild size="sm" className="gap-1.5">
+              <Link href="/admin/leads">
+                View leads
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

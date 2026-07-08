@@ -15,6 +15,7 @@ import {
   LogOut,
   Store,
   FileText,
+  UserPlus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -45,6 +46,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
       { href: '/admin/customers', label: 'Customers', icon: Users },
+      { href: '/admin/leads', label: 'Leads', icon: UserPlus },
     ],
   },
   {

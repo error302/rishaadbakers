@@ -159,3 +159,26 @@ model SiteSetting {
 
   @@map("site_settings")
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Leads (baking class enrolment enquiries)
+// ──────────────────────────────────────────────────────────────────────────────
+
+model Lead {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  phone           String
+  programInterest String   @default("Beginner Baking Class")
+  preferredStart  String?  // free-form text e.g. "January 2026 cohort"
+  message         String?
+  status          String   @default("NEW") // NEW | CONTACTED | ENROLLED | LOST
+  source          String   @default("school_page") // school_page | whatsapp | other
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([programInterest])
+  @@map("leads")
+}

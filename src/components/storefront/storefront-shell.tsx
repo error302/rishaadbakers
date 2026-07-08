@@ -3,6 +3,7 @@
 
 import { Header } from './header'
 import { Footer } from './footer'
+import { WhatsAppButton } from './whatsapp-button'
 import { getSiteSettings, type SiteSettings } from '@/lib/settings'
 
 export async function StorefrontShell({ children }: { children: React.ReactNode }) {
@@ -18,6 +19,11 @@ export async function StorefrontShell({ children }: { children: React.ReactNode 
       />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />
+      <WhatsAppButton
+        whatsapp={settings.whatsapp}
+        phone={settings.phone}
+        storeName={settings.storeName}
+      />
     </div>
   )
 }
@@ -35,6 +41,11 @@ export function StorefrontShellClient({ children, settings }: { children: React.
       />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />
+      <WhatsAppButton
+        whatsapp={settings.whatsapp}
+        phone={settings.phone}
+        storeName={settings.storeName}
+      />
     </div>
   )
 }

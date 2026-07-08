@@ -13,12 +13,14 @@ import {
   Award,
   Cake,
   AlertCircle,
+  UserPlus,
 } from 'lucide-react'
 import { StorefrontShell } from '@/components/storefront/storefront-shell'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getSiteSettings } from '@/lib/settings'
+import { EnrolmentForm } from './enrolment-form'
 
 export default async function SchoolPage() {
   const settings = await getSiteSettings()
@@ -47,15 +49,15 @@ export default async function SchoolPage() {
             <p className="mt-5 text-lg text-muted-foreground md:text-xl">{settings.schoolIntro}</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-12 gap-2 px-7 text-base">
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="h-5 w-5" />
-                  Book Your Spot on WhatsApp
+                <a href="#enrol">
+                  <UserPlus className="h-5 w-5" />
+                  Reserve your spot
                 </a>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 gap-2 px-7 text-base">
-                <a href={`tel:${settings.schoolContactPhone}`}>
-                  <Phone className="h-4 w-4" />
-                  Call: {settings.schoolContactPhone}
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp: {settings.schoolContactPhone}
                 </a>
               </Button>
             </div>
@@ -243,6 +245,23 @@ export default async function SchoolPage() {
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      {/* ────────── Enrolment form ────────── */}
+      <section id="enrol" className="container mx-auto px-4 pb-16 md:px-6 md:pb-24">
+        <div className="mx-auto max-w-2xl">
+          <div className="mb-6 text-center">
+            <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">Enrolment</p>
+            <h2 className="mt-2 font-serif text-3xl font-bold md:text-4xl">
+              Apply for the {settings.schoolProgramName}
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Spots are limited. Submit your details below and we&rsquo;ll reach out to confirm your place
+              within one business day.
+            </p>
+          </div>
+          <EnrolmentForm programName={settings.schoolProgramName} whatsappPhone={settings.whatsapp} />
+        </div>
       </section>
     </StorefrontShell>
   )
