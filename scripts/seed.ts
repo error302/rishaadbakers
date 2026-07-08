@@ -275,18 +275,75 @@ async function main() {
 
   // ── Site settings ───────────────────────────────────────────────────────────
   const settings: Record<string, string> = {
-    'store.name': 'Rishaad Bakers',
-    'store.tagline': 'Hand-crafted cakes, baked with love since 2014',
-    'store.phone': '+1 (555) 123-4567',
+    'store.name': "Rishaad Baker's",
+    'store.tagline': 'Delicious Taste — Hand-crafted cakes, baked with love',
+    'store.logoUrl': '/rishaad-logo.jpeg',
+    'store.logoAlt': "Rishaad Baker's logo — Delicious Taste",
+
+    'hero.badge': 'Baked fresh every morning',
+    'hero.headline': 'Cakes worth',
+    'hero.headlineAccent': 'celebrating',
+    'hero.subtext':
+      "Hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes. Every layer is whisked by hand, every flower piped with care, and every bite made with the kind of ingredients we'd feed our own families.",
+    'hero.ctaPrimary': 'Browse the Menu',
+    'hero.ctaSecondary': 'Our Story',
+
+    'about.title': 'From a home kitchen to a neighbourhood institution.',
+    'about.body':
+      "Rishaad Baker's began in a tiny home kitchen with one simple goal: to bake cakes that taste as good as they look. A decade later, we still whisk every batter by hand, source our chocolate from a single Belgian estate, and refuse to use anything we wouldn't feed our own families. Every cake that leaves our shop carries our name — and our promise.",
+    'about.ctaText': 'Read more about us',
+
+    'footer.tagline': 'Delicious Taste — Hand-crafted cakes, baked with love',
+    'footer.copyright': "Rishaad Baker's. All rights reserved.",
+
+    'store.phone': '0724 266 695',
     'store.email': 'hello@rishaadbakers.com',
-    'store.address': '142 Honeycrisp Lane, Old Town District, Portland, OR 97204',
-    'store.hours.weekday': 'Tue–Fri: 7:00 AM – 6:00 PM',
-    'store.hours.weekend': 'Sat–Sun: 8:00 AM – 5:00 PM',
+    'store.address': 'Nairobi, Kenya',
+    'store.hours.weekday': 'Tue–Fri: 8:00 AM – 6:00 PM',
+    'store.hours.weekend': 'Sat–Sun: 9:00 AM – 5:00 PM',
     'store.hours.closed': 'Closed Mondays',
     'store.instagram': 'https://instagram.com/rishaadbakers',
+    'store.whatsapp': '254724266695',
+
+    'school.enabled': 'true',
+    'school.headline': 'BEGINNER BAKING CLASS',
+    'school.subheadline': 'LEARN. BAKE. EARN!',
+    'school.badge': 'Now enrolling',
+    'school.intro':
+      "Turn your passion for baking into profit. Join our hands-on beginner baking class and learn to make 11 different cakes, cookies, icings, and a honeycomb — all in six weeks, with recipes and step-by-step guidance included.",
+    'school.programName': 'Beginner Baking Class',
+    'school.price': '15,000',
+    'school.duration': '6 Weeks',
+    'school.itemsLearned': [
+      'Vanilla Cake',
+      'Chocolate Cake',
+      'Passion Cake',
+      'Lemon Cake',
+      'Strawberry Cake',
+      'Classic Red Velvet',
+      'Classic Black Forest',
+      'Cookies',
+      'Cup Cakes',
+      'Soft Icing & Hard Icing',
+      'Honey Comb',
+      'Final Cake Exam',
+    ].join('\n'),
+    'school.features': [
+      'Hands-On Practicals',
+      'Beginner Friendly',
+      'Step-By-Step Guidance',
+      'Small Class Size',
+      'Recipes & Tips Included',
+    ].join('\n'),
+    'school.ctaText': 'TURN YOUR PASSION INTO PROFIT!',
+    'school.urgency': 'LIMITED SLOTS! BOOK YOUR SPOT NOW!',
+    'school.note':
+      'NOTE: All students carry their baked products home. Students are to buy their own tools.',
+    'school.contact': 'For More Info',
+    'school.contactPhone': '0724 266 695',
+
     'store.deliveryFeeCents': '500',
     'store.freeDeliveryThresholdCents': '7500',
-    'store.about': 'Rishaad Bakers began in a tiny home kitchen with one simple goal: to bake cakes that taste as good as they look. A decade later, we still whisk every batter by hand, source our chocolate from a single Belgian estate, and refuse to use anything we wouldn\u2019t feed our own families. Every cake that leaves our shop carries our name — and our promise.',
   }
   for (const [key, value] of Object.entries(settings)) {
     await db.siteSetting.upsert({
@@ -298,6 +355,11 @@ async function main() {
   console.log(`  ✓ ${Object.keys(settings).length} site settings`)
 
   // ── Demo customers & orders (so the admin dashboard has data to show) ───────
+  // Wipe existing demo orders first so the seed is idempotent (re-runnable)
+  await db.orderItem.deleteMany()
+  await db.order.deleteMany()
+  await db.customer.deleteMany()
+
   const demoCustomers = [
     { name: 'Amara Patel', email: 'amara.patel@example.com', phone: '+1 (503) 555-0142', address: '88 Willow St, Portland, OR 97201' },
     { name: 'Marcus Chen', email: 'marcus.chen@example.com', phone: '+1 (503) 555-0173', address: '15 Cedar Ave, Portland, OR 97205' },

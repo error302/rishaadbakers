@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "**Business Name**: Rishaad Baker's  \n**Tagline**: Delicious Taste  \n\n**Main Headline**: BEGINNER BAKING CLASS  \n**Subheadline**: LEARN. BAKE. EARN!  \n\n**Logo Description**: Circular green logo with a chef’s hat icon at the top, laurel wreath border, text \"Rishaad Baker's\" in gold, and \"DELICIOUS TASTE\" in smaller gold text below.  \n\n**You Will Learn (Menu/Class Items)**:  \n- Vanilla Cake  \n- Chocolate Cake  \n- Passion Cake  \n- Lemon Cake  \n- Strawberry Cake  \n- Classic Red Velvet  \n- Classic Black Forest  \n- Cookies  \n- Cup Cakes  \n- Soft Icing & Hard Icing  \n- Honey Comb  \n- Final Cake Exam  \n\n**Class Features**:  \n- Hands-On Practicals  \n- Beginner Friendly  \n- Step-By-Step Guidance  \n- Small Class Size  \n- Recipes & Tips Included  \n\n**Call to Action**: TURN YOUR PASSION INTO PROFIT!  \n\n**Pricing & Duration**:  \n- Price: 15,000  \n- Duration: 6 WEEKS  \n\n**Urgency**: LIMITED SLOTS! BOOK YOUR SPOT NOW!  \n\n**Contact Info**:  \n- For More Info: 0724 266 695 (WhatsApp icon included)  \n\n**Note**: A NOTE: ALL STUDENTS CARRY THEIR BAKED PRODUCTS AT HOME, STUDENTS TO BUY THEIR TOOLS OWN TOOLS",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1783506900,
+  "id": "2026070818344918ac06071aea4604",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "2026070818344918ac06071aea4604",
+  "usage": {
+    "completion_tokens": 305,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2227,
+    "prompt_tokens_details": {
+      "cached_tokens": 8
+    },
+    "total_tokens": 2532
+  }
+}

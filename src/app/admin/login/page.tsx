@@ -1,15 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Cake, Loader2, LogIn } from 'lucide-react'
+import { Loader2, LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/storefront/theme-toggle'
+import { Logo } from '@/components/storefront/logo'
 import { toast } from 'sonner'
 
 export default function AdminLoginPage() {
@@ -19,6 +20,20 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState('admin@rishaadbakers.com')
   const [password, setPassword] = useState('admin123')
   const [loading, setLoading] = useState(false)
+  const [settings, setSettings] = useState<{ storeName: string; logoUrl: string; logoAlt: string } | null>(null)
+
+  useEffect(() => {
+    fetch('/api/site-info')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.storeName) {
+          setSettings({ storeName: data.storeName, logoUrl: data.logoUrl, logoAlt: data.logoAlt })
+        }
+      })
+      .catch(() => {
+        // Ignore — fallback to plain text brand
+      })
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,10 +62,8 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen flex-col bg-bakery-gradient">
       <header className="flex items-center justify-between px-4 py-4 md:px-6">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Cake className="h-5 w-5" />
-          </div>
-          <span className="font-serif text-lg font-bold">Rishaad Bakers</span>
+          <Logo src={settings?.logoUrl ?? ''} alt={settings?.logoAlt ?? 'Logo'} size={40} />
+          <span className="font-serif text-lg font-bold">{settings?.storeName ?? 'Admin'}</span>
         </Link>
         <ThemeToggle />
       </header>

@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Business Name: RISHAAD Baker's  \nTagline: DELICIOUS TASTE  \n\nLogo Description: A circular gold emblem on a deep green background. The logo includes a chef’s hat icon to the left of the text, a laurel branch (olive leaves) arching over the top of the circle, and another laurel branch at the bottom. The text “RISHAAD” is in bold, uppercase serif font at the top of the circle, “Baker's” is in a large, flowing cursive serif font in the center, and “DELICIOUS TASTE” is on a horizontal gold banner below “Baker's”. The design uses gold and green colors, with the text and decorative elements in gold against the green background.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1783506889,
+  "id": "202607081834447ca13c84910d4f4f",
+  "model": "glm-4.6v",
+  "object": "chat.completion",
+  "request_id": "202607081834447ca13c84910d4f4f",
+  "usage": {
+    "completion_tokens": 157,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1479,
+    "prompt_tokens_details": {
+      "cached_tokens": 6
+    },
+    "total_tokens": 1636
+  }
+}

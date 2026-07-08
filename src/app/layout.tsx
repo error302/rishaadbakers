@@ -22,31 +22,37 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Rishaad Bakers — Hand-crafted Cakes & Pastries",
+  title: "Rishaad Baker's — Delicious Taste | Hand-crafted Cakes & Baking Classes",
   description:
-    "Rishaad Bakers bakes hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes in Portland. Order online for pickup or delivery.",
+    "Rishaad Baker's bakes hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes in Nairobi. Order online or join our Beginner Baking Class — Learn. Bake. Earn!",
   keywords: [
     "bakery",
     "cakes",
     "custom cakes",
     "cupcakes",
     "pastries",
-    "Portland bakery",
-    "Rishaad Bakers",
+    "Nairobi bakery",
+    "Rishaad Baker's",
     "wedding cakes",
     "birthday cakes",
+    "baking class",
+    "baking school",
+    "beginner baking class",
   ],
-  authors: [{ name: "Rishaad Bakers" }],
+  authors: [{ name: "Rishaad Baker's" }],
+  icons: {
+    icon: "/rishaad-logo.jpeg",
+  },
   openGraph: {
-    title: "Rishaad Bakers — Hand-crafted Cakes & Pastries",
-    description: "Hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes. Order online for pickup or delivery.",
-    siteName: "Rishaad Bakers",
+    title: "Rishaad Baker's — Delicious Taste",
+    description: "Hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes. Order online or join our Beginner Baking Class.",
+    siteName: "Rishaad Baker's",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rishaad Bakers",
-    description: "Hand-crafted cakes, baked with love since 2014.",
+    title: "Rishaad Baker's",
+    description: "Delicious Taste — Hand-crafted cakes, baked with love. Learn. Bake. Earn!",
   },
 };
 

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Cake, Cookie, Croissant, CupSoda, Heart, Leaf, Sparkles, Star, Truck } from 'lucide-react'
+import { ArrowRight, Cake, Cookie, Croissant, CupSoda, Heart, Leaf, Sparkles, Star, Truck, GraduationCap, CheckCircle2, MessageCircle, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +25,12 @@ export default async function Home() {
     getProducts({ featured: true, limit: 8 }),
   ])
 
+  const schoolItems = settings.schoolItemsLearned.split('\n').filter(Boolean)
+  const schoolFeatures = settings.schoolFeatures.split('\n').filter(Boolean)
+  const whatsappLink = `https://wa.me/${settings.whatsapp}?text=${encodeURIComponent(
+    `Hello! I'd like to book a spot in the ${settings.schoolProgramName}.`
+  )}`
+
   return (
     <StorefrontShell>
       {/* ────────── Hero ────────── */}
@@ -34,26 +40,24 @@ export default async function Home() {
             <div className="flex flex-col gap-6 text-center lg:text-left">
               <Badge variant="secondary" className="mx-auto w-fit gap-1.5 px-3 py-1.5 lg:mx-0">
                 <Sparkles className="h-3 w-3" />
-                Baked fresh every morning
+                {settings.heroBadge}
               </Badge>
               <h1 className="font-serif text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-5xl lg:text-6xl xl:text-7xl">
-                Cakes worth
-                <span className="block text-accent">celebrating</span>
-                since 2014.
+                {settings.heroHeadline}
+                <span className="block text-accent">{settings.heroHeadlineAccent}</span>
               </h1>
               <p className="mx-auto max-w-xl text-base text-muted-foreground md:text-lg lg:mx-0">
-                {settings.tagline}. Every layer is whisked by hand, every flower piped with care,
-                and every bite made with the kind of ingredients we&rsquo;d feed our own families.
+                {settings.heroSubtext}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row lg:justify-start justify-center">
                 <Button asChild size="lg" className="h-12 px-7 text-base">
                   <Link href="/menu">
-                    Browse the Menu
+                    {settings.heroCtaPrimary}
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base">
-                  <Link href="/about">Our Story</Link>
+                  <Link href="/about">{settings.heroCtaSecondary}</Link>
                 </Button>
               </div>
               <div className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground lg:justify-start">
@@ -77,7 +81,7 @@ export default async function Home() {
               <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-warm-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1200&q=85"
-                  alt="Hand-decorated celebration cake from Rishaad Bakers"
+                  alt="Hand-decorated celebration cake from Rishaad Baker's"
                   fill
                   priority
                   sizes="(max-width: 1024px) 90vw, 45vw"
@@ -173,13 +177,114 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ────────── School / Baking Class section ────────── */}
+      {settings.schoolEnabled && (
+        <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
+          <Card className="overflow-hidden border-2 border-accent/30 bg-gradient-to-br from-accent/5 via-background to-primary/5">
+            <div className="grid gap-8 p-6 md:grid-cols-2 md:p-10 lg:p-12">
+              {/* Left: details */}
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge className="gap-1.5 bg-accent text-accent-foreground hover:bg-accent">
+                    <GraduationCap className="h-3 w-3" />
+                    {settings.schoolBadge}
+                  </Badge>
+                  <Badge variant="outline" className="gap-1">
+                    <Sparkles className="h-3 w-3" />
+                    {settings.schoolDuration}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">
+                    {settings.schoolSubheadline}
+                  </p>
+                  <h2 className="mt-2 font-serif text-3xl font-bold leading-tight md:text-4xl lg:text-5xl">
+                    {settings.schoolHeadline}
+                  </h2>
+                </div>
+                <p className="text-base text-muted-foreground">{settings.schoolIntro}</p>
+
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {schoolFeatures.map((f) => (
+                    <div key={f} className="flex items-start gap-2 text-sm">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                      <span>{f}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid gap-3 rounded-xl border border-border bg-background p-5 shadow-warm sm:grid-cols-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Program</p>
+                    <p className="font-serif text-lg font-bold">{settings.schoolProgramName}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Duration</p>
+                    <p className="font-serif text-lg font-bold">{settings.schoolDuration}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">Price</p>
+                    <p className="font-serif text-lg font-bold text-accent">{settings.schoolPrice}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button asChild size="lg" className="h-12 gap-2">
+                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                      <MessageCircle className="h-5 w-5" />
+                      {settings.schoolUrgency}
+                    </a>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="h-12 gap-2">
+                    <Link href="/school">
+                      View full details
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+
+                <p className="rounded-lg bg-muted/60 p-3 text-xs text-muted-foreground">
+                  {settings.schoolNote}
+                </p>
+              </div>
+
+              {/* Right: items you'll learn */}
+              <div className="flex flex-col gap-4 rounded-xl bg-background p-5 shadow-warm md:p-6">
+                <div>
+                  <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">You will learn</p>
+                  <h3 className="mt-1 font-serif text-xl font-bold">{schoolItems.length} recipes &amp; techniques</h3>
+                </div>
+                <ul className="grid gap-2 sm:grid-cols-2">
+                  {schoolItems.map((item, i) => (
+                    <li key={i} className="flex items-center gap-2.5 rounded-lg border border-border/60 bg-secondary/30 px-3 py-2 text-sm">
+                      <Cake className="h-4 w-4 shrink-0 text-primary" />
+                      <span className="font-medium">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-2 rounded-lg bg-accent/10 p-4 text-center">
+                  <p className="font-serif text-lg font-bold text-accent">{settings.schoolCtaText}</p>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-sm">
+                  <Phone className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">{settings.schoolContact}:</span>
+                  <a href={`tel:${settings.schoolContactPhone}`} className="font-semibold hover:text-primary">
+                    {settings.schoolContactPhone}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </section>
+      )}
+
       {/* ────────── About teaser ────────── */}
       <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="relative aspect-[5/4] w-full overflow-hidden rounded-3xl">
             <Image
               src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1200&q=85"
-              alt="Inside the Rishaad Bakers kitchen"
+              alt="Inside the Rishaad Baker's kitchen"
               fill
               sizes="(max-width: 1024px) 90vw, 45vw"
               className="object-cover"
@@ -189,16 +294,10 @@ export default async function Home() {
           <div className="flex flex-col gap-5">
             <p className="font-serif text-sm uppercase tracking-[0.3em] text-accent">Our Story</p>
             <h2 className="font-serif text-3xl font-bold leading-tight md:text-4xl">
-              From a home kitchen to a neighbourhood institution.
+              {settings.aboutTitle}
             </h2>
             <p className="text-base text-muted-foreground">
               {settings.about}
-            </p>
-            <p className="text-base text-muted-foreground">
-              Every cake that leaves our shop carries our name — and our promise. We source single-estate
-              Belgian chocolate, stone-mill our own almond flour, and refuse to use anything we
-              wouldn&rsquo;t feed our own families. Walk in any morning and you&rsquo;ll find us whisking,
-              piping, and tasting — because that&rsquo;s the only way we know how to bake.
             </p>
             <div className="grid grid-cols-3 gap-4 border-t border-border pt-6">
               <div>
@@ -216,7 +315,7 @@ export default async function Home() {
             </div>
             <Button asChild className="mt-2 w-fit">
               <Link href="/about">
-                Read more about us
+                {settings.aboutCtaText}
                 <ArrowRight className="ml-1.5 h-4 w-4" />
               </Link>
             </Button>
@@ -247,7 +346,7 @@ export default async function Home() {
               },
               {
                 quote:
-                  'I stop in every Saturday for croissants and a macaron box. The butter croissant is the best in Portland — and I\u2019ve tried them all.',
+                  'I stop in every Saturday for croissants and a macaron box. The butter croissant is the best in Nairobi — and I\u2019ve tried them all.',
                 name: 'Tom B.',
                 role: 'Weekly regular',
               },

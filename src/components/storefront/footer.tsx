@@ -1,10 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { Cake, Instagram, Mail, MapPin, Phone, Clock } from 'lucide-react'
+import { Instagram, Mail, MapPin, Phone, Clock, MessageCircle } from 'lucide-react'
+import { Logo } from './logo'
 import type { SiteSettings } from '@/lib/settings'
 
-export function Footer({ settings }: { settings: SiteSettings }) {
+type FooterProps = {
+  settings: SiteSettings
+}
+
+export function Footer({ settings }: FooterProps) {
   return (
     <footer className="mt-auto border-t border-border bg-secondary/40">
       <div className="container mx-auto px-4 py-12 md:px-6 md:py-16">
@@ -12,23 +17,34 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Cake className="h-5 w-5" />
-              </div>
+              <Logo src={settings.logoUrl} alt={settings.logoAlt} size={44} />
               <span className="font-serif text-lg font-bold">{settings.storeName}</span>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              {settings.tagline}
+              {settings.footerTagline}
             </p>
-            <a
-              href={settings.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Instagram className="h-4 w-4" />
-              @rishaadbakers
-            </a>
+            <div className="mt-4 flex flex-col gap-2">
+              <a
+                href={settings.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Instagram className="h-4 w-4" />
+                @rishaadbakers
+              </a>
+              {settings.whatsapp && (
+                <a
+                  href={`https://wa.me/${settings.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp: {settings.schoolContactPhone || settings.phone}
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Visit us */}
@@ -83,6 +99,13 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                   Our Story
                 </Link>
               </li>
+              {settings.schoolEnabled && (
+                <li>
+                  <Link href="/school" className="text-muted-foreground hover:text-primary transition-colors">
+                    Baking Class
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Custom Orders
@@ -104,12 +127,12 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {settings.storeName}. All rights reserved.
+            © {new Date().getFullYear()} {settings.footerCopyright}
           </p>
           <p className="flex items-center gap-1.5">
             Baked with
             <span className="text-accent">♥</span>
-            in Portland, Oregon
+            in Nairobi, Kenya
           </p>
         </div>
       </div>

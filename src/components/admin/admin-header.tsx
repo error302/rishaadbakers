@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  Cake,
   LayoutDashboard,
   Package,
   ShoppingCart,
@@ -14,13 +13,14 @@ import {
   Menu,
   LogOut,
   Store,
-  X,
+  FileText,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { signOut } from 'next-auth/react'
 import { ThemeToggle } from '@/components/storefront/theme-toggle'
+import { Logo } from '@/components/storefront/logo'
 
 const NAV_GROUPS: { label: string; items: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }[] }[] = [
   {
@@ -42,8 +42,11 @@ const NAV_GROUPS: { label: string; items: { href: string; label: string; icon: R
     ],
   },
   {
-    label: 'System',
-    items: [{ href: '/admin/settings', label: 'Settings', icon: Settings }],
+    label: 'Site',
+    items: [
+      { href: '/admin/content', label: 'Content & Wording', icon: FileText },
+      { href: '/admin/settings', label: 'Settings', icon: Settings },
+    ],
   },
 ]
 
@@ -53,11 +56,19 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/admin/orders')) return 'Orders'
   if (pathname.startsWith('/admin/categories')) return 'Categories'
   if (pathname.startsWith('/admin/customers')) return 'Customers'
+  if (pathname.startsWith('/admin/content')) return 'Content & Wording'
   if (pathname.startsWith('/admin/settings')) return 'Settings'
   return 'Admin'
 }
 
-export function AdminHeader({ user }: { user?: { name?: string | null; email?: string | null } }) {
+type AdminHeaderProps = {
+  user?: { name?: string | null; email?: string | null }
+  storeName?: string
+  logoUrl?: string
+  logoAlt?: string
+}
+
+export function AdminHeader({ user, storeName, logoUrl, logoAlt }: AdminHeaderProps) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const title = getPageTitle(pathname)
@@ -77,11 +88,9 @@ export function AdminHeader({ user }: { user?: { name?: string | null; email?: s
           <SheetContent side="left" className="w-72 p-0">
             <SheetHeader className="border-b border-sidebar-border px-4 py-4">
               <SheetTitle className="flex items-center gap-2.5 font-serif text-left">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <Cake className="h-5 w-5" />
-                </div>
+                <Logo src={logoUrl ?? ''} alt={logoAlt ?? storeName ?? 'Logo'} size={36} />
                 <div className="flex flex-col leading-none">
-                  <span className="text-sm font-bold">Rishaad Bakers</span>
+                  <span className="text-sm font-bold">{storeName ?? 'Admin'}</span>
                   <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Admin</span>
                 </div>
               </SheetTitle>

@@ -9,7 +9,13 @@ export async function StorefrontShell({ children }: { children: React.ReactNode 
   const settings = await getSiteSettings()
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <Header
+        storeName={settings.storeName}
+        logoUrl={settings.logoUrl}
+        logoAlt={settings.logoAlt}
+        schoolEnabled={settings.schoolEnabled}
+        whatsapp={settings.whatsapp}
+      />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />
     </div>
@@ -20,7 +26,13 @@ export async function StorefrontShell({ children }: { children: React.ReactNode 
 export function StorefrontShellClient({ children, settings }: { children: React.ReactNode; settings: SiteSettings }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <Header
+        storeName={settings.storeName}
+        logoUrl={settings.logoUrl}
+        logoAlt={settings.logoAlt}
+        schoolEnabled={settings.schoolEnabled}
+        whatsapp={settings.whatsapp}
+      />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />
     </div>

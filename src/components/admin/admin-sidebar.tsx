@@ -14,11 +14,13 @@ import {
   ChevronLeft,
   LogOut,
   Store,
+  FileText,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { Logo } from '@/components/storefront/logo'
 
 type NavItem = {
   href: string
@@ -46,12 +48,22 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
-    label: 'System',
-    items: [{ href: '/admin/settings', label: 'Settings', icon: Settings }],
+    label: 'Site',
+    items: [
+      { href: '/admin/content', label: 'Content & Wording', icon: FileText },
+      { href: '/admin/settings', label: 'Settings', icon: Settings },
+    ],
   },
 ]
 
-export function AdminSidebar({ user }: { user?: { name?: string | null; email?: string | null } }) {
+type AdminSidebarProps = {
+  user?: { name?: string | null; email?: string | null }
+  storeName?: string
+  logoUrl?: string
+  logoAlt?: string
+}
+
+export function AdminSidebar({ user, storeName, logoUrl, logoAlt }: AdminSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [collapsed, setCollapsed] = useState(false)
@@ -70,12 +82,10 @@ export function AdminSidebar({ user }: { user?: { name?: string | null; email?: 
       >
         <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
           <Link href="/admin" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Cake className="h-5 w-5" />
-            </div>
+            <Logo src={logoUrl ?? ''} alt={logoAlt ?? storeName ?? 'Logo'} size={36} />
             {!collapsed && (
               <div className="flex flex-col leading-none">
-                <span className="font-serif text-sm font-bold">Rishaad Bakers</span>
+                <span className="font-serif text-sm font-bold">{storeName ?? 'Admin'}</span>
                 <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Admin</span>
               </div>
             )}

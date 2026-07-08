@@ -1,7 +1,7 @@
-import { AdminSettingsClient } from './admin-settings-client'
-import { getSiteSettings } from '@/lib/settings'
+// The old "Settings" page is now part of the unified "Content & Wording" page.
+// Redirect users there.
+import { redirect } from 'next/navigation'
 
-export default async function AdminSettingsPage() {
-  const settings = await getSiteSettings()
-  return <AdminSettingsClient settings={settings} />
+export default function AdminSettingsPage() {
+  redirect('/admin/content')
 }
