@@ -346,7 +346,7 @@ export default async function Home() {
               },
               {
                 quote:
-                  'I stop in every Saturday for croissants and a macaron box. The butter croissant is the best in Nairobi — and I\u2019ve tried them all.',
+                  'I stop in every Saturday for croissants and a macaron box. The butter croissant is the best in Mombasa — and I\u2019ve tried them all.',
                 name: 'Tom B.',
                 role: 'Weekly regular',
               },

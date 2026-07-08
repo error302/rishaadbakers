@@ -132,7 +132,7 @@ export function Footer({ settings }: FooterProps) {
           <p className="flex items-center gap-1.5">
             Baked with
             <span className="text-accent">♥</span>
-            in Nairobi, Kenya
+            in Mombasa, Kenya
           </p>
         </div>
       </div>

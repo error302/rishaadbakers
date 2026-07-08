@@ -86,7 +86,7 @@ const DEFAULTS: SiteSettings = {
 
   phone: '0724 266 695',
   email: 'hello@rishaadbakers.com',
-  address: 'Nairobi, Kenya',
+  address: 'Mombasa, Kenya',
   hoursWeekday: 'Tue–Fri: 8:00 AM – 6:00 PM',
   hoursWeekend: 'Sat–Sun: 9:00 AM – 5:00 PM',
   hoursClosed: 'Closed Mondays',

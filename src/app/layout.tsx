@@ -24,14 +24,14 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Rishaad Baker's — Delicious Taste | Hand-crafted Cakes & Baking Classes",
   description:
-    "Rishaad Baker's bakes hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes in Nairobi. Order online or join our Beginner Baking Class — Learn. Bake. Earn!",
+    "Rishaad Baker's bakes hand-crafted layer cakes, cupcakes, pastries, and bespoke celebration cakes in Mombasa, Kenya. Order online or join our Beginner Baking Class — Learn. Bake. Earn!",
   keywords: [
     "bakery",
     "cakes",
     "custom cakes",
     "cupcakes",
     "pastries",
-    "Nairobi bakery",
+    "Mombasa bakery",
     "Rishaad Baker's",
     "wedding cakes",
     "birthday cakes",

@@ -300,7 +300,7 @@ async function main() {
 
     'store.phone': '0724 266 695',
     'store.email': 'hello@rishaadbakers.com',
-    'store.address': 'Nairobi, Kenya',
+    'store.address': 'Mombasa, Kenya',
     'store.hours.weekday': 'Tue–Fri: 8:00 AM – 6:00 PM',
     'store.hours.weekend': 'Sat–Sun: 9:00 AM – 5:00 PM',
     'store.hours.closed': 'Closed Mondays',
