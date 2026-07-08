@@ -1,0 +1,161 @@
+// Rishaad Bakers — Prisma schema
+// Patterns applied (per agency-agents Backend Architect + Payments & Billing Engineer):
+//   - cuid() IDs everywhere
+//   - Money stored as integer minor units (cents) — never float
+//   - Soft deletes via `deletedAt` (orders are NEVER hard-deleted, only status-transitioned)
+//   - Order state machine: PENDING → PROCESSING → COMPLETED | CANCELLED | REFUNDED
+//   - Stock tracking with non-negative check at app layer
+//   - Dietary/allergy capture on every order (Hospitality Guest Services rule)
+//   - @@map to plural snake_case table names
+//
+// Note: SQLite adapter — partial indexes / GIN full-text search omitted (Postgres-only).
+//       Search is implemented at the app layer via Prisma `contains` queries.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Auth & Users
+// ──────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         String   @default("CUSTOMER") // CUSTOMER | ADMIN | BAKER
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@map("users")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Catalog
+// ──────────────────────────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  imageUrl    String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String
+  priceCents    Int
+  categoryId    String
+  imageUrl      String
+  galleryJson   String? // JSON-encoded string array of image URLs
+  isAvailable   Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  stock         Int      @default(0)
+  dietaryJson   String?  // JSON-encoded string array e.g. ["vegan","gluten-free"]
+  ingredients   String?
+  weightGrams   Int?
+  servesPeople  Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+
+  category      Category @relation(fields: [categoryId], references: [id])
+  orderItems    OrderItem[]
+
+  @@index([categoryId])
+  @@index([isFeatured])
+  @@index([isAvailable])
+  @@map("products")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Customers & Orders
+// ──────────────────────────────────────────────────────────────────────────────
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  address   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([email])
+  @@map("customers")
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  orderNumber   String   @unique
+  customerId    String
+  status        String   @default("PENDING") // PENDING | PROCESSING | COMPLETED | CANCELLED | REFUNDED
+  subtotalCents Int
+  deliveryCents Int      @default(0)
+  totalCents    Int
+  notes         String?
+  allergyNotes  String? // Hospitality Guest Services: allergies captured per order
+  deliveryDate  DateTime?
+  deliveryTime  String?
+  deliveryAddr  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  orderItems OrderItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  productId      String
+  productName    String // snapshot at time of order (products may be deleted later)
+  productImage   String?
+  unitPriceCents Int
+  quantity       Int
+  subtotalCents  Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Site Settings (key/value store for store info)
+// ──────────────────────────────────────────────────────────────────────────────
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  @@map("site_settings")
+}
