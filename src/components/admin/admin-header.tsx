@@ -15,6 +15,7 @@ import {
   Store,
   FileText,
   UserPlus,
+  KeyRound,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -60,6 +61,7 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/admin/customers')) return 'Customers'
   if (pathname.startsWith('/admin/leads')) return 'Leads'
   if (pathname.startsWith('/admin/content')) return 'Content & Wording'
+  if (pathname.startsWith('/admin/change-password')) return 'Change Password'
   if (pathname.startsWith('/admin/settings')) return 'Settings'
   return 'Admin'
 }
@@ -130,6 +132,11 @@ export function AdminHeader({ user, storeName, logoUrl, logoAlt }: AdminHeaderPr
                 </div>
               ))}
               <div className="mt-4 border-t border-border pt-3">
+                <Button asChild variant="ghost" size="sm" className="w-full justify-start gap-2">
+                  <Link href="/admin/change-password">
+                    <KeyRound className="h-4 w-4" /> Change password
+                  </Link>
+                </Button>
                 <Button asChild variant="ghost" size="sm" className="w-full justify-start gap-2">
                   <Link href="/" target="_blank">
                     <Store className="h-4 w-4" /> View store

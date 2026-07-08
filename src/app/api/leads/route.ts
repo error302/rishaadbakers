@@ -1,10 +1,13 @@
 // Rishaad Bakers — Public Lead submission API
 // POST /api/leads — receives an enrolment enquiry from the /school page form.
 // Public (no auth). Validates input. Stores in DB so admin can follow up.
+// Rate-limited: 3 submissions per 10 minutes per IP.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
+import { notifyNewLead } from '@/lib/notifications'
 
 const leadSchema = z.object({
   name: z.string().min(2, 'Name is required').max(100),
@@ -16,6 +19,23 @@ const leadSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 3 per 10 min per IP
+  const ip = getClientIP(req)
+  const limit = rateLimit('leads.submit', ip)
+  if (!limit.ok) {
+    const retryAfter = Math.ceil((limit.resetAt - Date.now()) / 1000)
+    return NextResponse.json(
+      { error: 'Too many enquiries. Please try again later.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(retryAfter),
+          'X-RateLimit-Remaining': '0',
+        },
+      }
+    )
+  }
+
   try {
     const body = await req.json()
     const parsed = leadSchema.safeParse(body)
@@ -39,6 +59,11 @@ export async function POST(req: NextRequest) {
         source: 'school_page',
       },
     })
+
+    // Fire-and-forget: notify admin of new lead (email or console log)
+    notifyNewLead(lead).catch((e) =>
+      console.error('Lead notification failed:', e)
+    )
 
     return NextResponse.json(
       { id: lead.id, success: true, message: 'Enquiry received — we\u2019ll be in touch within one business day.' },

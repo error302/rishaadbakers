@@ -2,35 +2,37 @@
 // Run with: bun run scripts/seed.ts
 //
 // Seeds:
-//   - 1 admin user (admin@rishaadbakers.com / admin123)
+//   - 1 admin user (admin@rishaadbakers.com / admin123 — CHANGE THIS PASSWORD IN PRODUCTION)
 //   - 5 categories
 //   - 14 sample products with Unsplash imagery
 //   - Site settings (store name, phone, address, hours, delivery fee)
 //   - 4 demo customers + 7 sample orders
 
 import { PrismaClient } from '@prisma/client'
-import { createHash } from 'crypto'
+import bcrypt from 'bcryptjs'
 
 const db = new PrismaClient()
 
-// Simple SHA-256 hash with salt (matches our auth helper — sufficient for demo admin).
-// In production this would be bcrypt/argon2.
-function hashPassword(password: string): string {
-  const salt = 'rishaad-bakers-salt-v1'
-  return createHash('sha256').update(salt + password).digest('hex')
+const SALT_ROUNDS = 12
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, SALT_ROUNDS)
 }
 
 async function main() {
   console.log('🌱 Seeding Rishaad Bakers database...')
 
   // ── Admin user ──────────────────────────────────────────────────────────────
+  // Always (re)set the admin password on seed so migrations from legacy SHA-256
+  // → bcrypt happen automatically. Use the ADMIN_PASSWORD env var if set.
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+  const adminHash = await hashPassword(adminPassword)
   const admin = await db.user.upsert({
     where: { email: 'admin@rishaadbakers.com' },
-    update: {},
+    update: { passwordHash: adminHash },
     create: {
       email: 'admin@rishaadbakers.com',
       name: 'Rishaad Admin',
-      passwordHash: hashPassword('admin123'),
+      passwordHash: adminHash,
       role: 'ADMIN',
     },
   })

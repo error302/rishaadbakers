@@ -4,10 +4,14 @@
 //   - Server re-computes totals (never trust client totals)
 //   - Orders are NEVER deleted — only status-transitioned later
 //   - Allergies captured per order (Hospitality Guest Services rule)
+//   - Rate-limited: 5 per 10 min per IP
+//   - Email notifications on success
 
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { generateOrderNumber } from '@/lib/format'
+import { rateLimit, getClientIP } from '@/lib/rate-limit'
+import { notifyNewOrder, notifyOrderConfirmation, logError } from '@/lib/notifications'
 
 type CheckoutPayload = {
   customerName: string
@@ -31,6 +35,17 @@ type CheckoutPayload = {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 5 per 10 min per IP
+  const ip = getClientIP(req)
+  const limit = rateLimit('checkout.submit', ip)
+  if (!limit.ok) {
+    const retryAfter = Math.ceil((limit.resetAt - Date.now()) / 1000)
+    return NextResponse.json(
+      { error: 'Too many orders. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
+
   try {
     const body = (await req.json()) as CheckoutPayload
 
@@ -154,6 +169,18 @@ export async function POST(req: NextRequest) {
       )
     )
 
+    // Fire-and-forget: notify admin + customer (email or console log)
+    const orderWithCustomer = await db.order.findUnique({
+      where: { id: order.id },
+      include: { customer: true },
+    })
+    if (orderWithCustomer) {
+      Promise.all([
+        notifyNewOrder(orderWithCustomer),
+        notifyOrderConfirmation(orderWithCustomer),
+      ]).catch((e) => logError(e, { orderId: order.id }))
+    }
+
     return NextResponse.json({
       orderId: order.id,
       orderNumber: order.orderNumber,
@@ -161,7 +188,7 @@ export async function POST(req: NextRequest) {
       status: order.status,
     })
   } catch (e) {
-    console.error('Checkout error:', e)
+    logError(e, { endpoint: 'checkout' })
     return NextResponse.json(
       { error: e instanceof Error ? e.message : 'Checkout failed' },
       { status: 500 }

@@ -1,16 +1,20 @@
 // Rishaad Bakers — auth helpers
-// Uses NextAuth credentials provider with a SHA-256 password hash.
-// (Sufficient for demo; production would use bcrypt/argon2 + a real DB user store.)
+// Uses NextAuth credentials provider with bcrypt password hashing.
+// Per agency-agents Backend Architect: defense in depth, least privilege.
 
 import { NextAuthOptions, getServerSession } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { createHash } from 'crypto'
+import bcrypt from 'bcryptjs'
 import { db } from '@/lib/db'
 
-const SALT = 'rishaad-bakers-salt-v1'
+const SALT_ROUNDS = 12
 
-export function hashPassword(password: string): string {
-  return createHash('sha256').update(SALT + password).digest('hex')
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, SALT_ROUNDS)
+}
+
+export function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash)
 }
 
 export const authOptions: NextAuthOptions = {
@@ -35,8 +39,16 @@ export const authOptions: NextAuthOptions = {
         })
         if (!user) return null
 
-        const hash = hashPassword(credentials.password)
-        if (hash !== user.passwordHash) return null
+        // Backward-compat: if the stored hash looks like a legacy SHA-256 hex
+        // (64 chars, no $ prefix), reject and force a password reset.
+        const isBcrypt = user.passwordHash.startsWith('$2')
+        if (!isBcrypt) {
+          console.warn(`User ${user.email} has legacy password hash — forcing reset`)
+          return null
+        }
+
+        const valid = await verifyPassword(credentials.password, user.passwordHash)
+        if (!valid) return null
 
         return {
           id: user.id,

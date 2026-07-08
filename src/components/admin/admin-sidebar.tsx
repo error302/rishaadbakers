@@ -16,6 +16,7 @@ import {
   Store,
   FileText,
   UserPlus,
+  KeyRound,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -148,11 +149,22 @@ export function AdminSidebar({ user, storeName, logoUrl, logoAlt }: AdminSidebar
               variant="ghost"
               size="sm"
               className="flex-1 justify-start gap-2"
+              title={collapsed ? 'Change password' : undefined}
+            >
+              <Link href="/admin/change-password">
+                <KeyRound className="h-4 w-4" />
+                {!collapsed && 'Password'}
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
               title={collapsed ? 'View store' : undefined}
+              className="gap-2"
             >
               <Link href="/" target="_blank">
                 <Store className="h-4 w-4" />
-                {!collapsed && 'View store'}
               </Link>
             </Button>
             <Button
@@ -163,7 +175,6 @@ export function AdminSidebar({ user, storeName, logoUrl, logoAlt }: AdminSidebar
               className="gap-2"
             >
               <LogOut className="h-4 w-4" />
-              {!collapsed && 'Sign out'}
             </Button>
           </div>
         </div>
